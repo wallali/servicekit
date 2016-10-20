@@ -1,6 +1,6 @@
 {
   "name": "servicekit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An assortment of useful service wrappers with uniform initialization and simplified client calls.",
   "main": "index.js",
   "scripts": {

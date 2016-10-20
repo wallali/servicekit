@@ -1,0 +1,33 @@
+{
+  "name": "servicekit",
+  "version": "0.0.1",
+  "description": "An assortment of useful service wrappers with a uniform initialisation interface.",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "npm install",
+    "test": "node_modules/.bin/mocha",
+    "lint": "node_modules/.bin/eslint *.js test",
+    "coverage": "node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
+  },
+  "author": "Ali Lokhandwala (ali@huestones.co.uk)",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "lodash": "^4.16.2",
+    "watson-developer-cloud": "^2.4.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wallali/servicekit"
+  },
+  "devDependencies": {
+    "eslint": "^3.8.1",
+    "eslint-config-defaults": "^9.0.0",
+    "istanbul": "^0.4.4",
+    "mocha": "^3.1.2",
+    "sinon": "^1.17.4"
+  },
+  "engines": {
+    "node": "4.x"
+  }
+}

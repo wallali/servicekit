@@ -1,0 +1,82 @@
+/**
+ * Copyright (c) 2016 Ali Lokhandwala <ali@huestones.co.uk>. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+'use strict';
+
+var inspect = require('util').inspect;
+var AlchemyLanguageV1 = require('watson-developer-cloud/alchemy-language/v1');
+var _ = require('lodash');
+
+var debug = require('debug')('servicekit:alchemy');
+var noop = function () {};
+
+/**
+ * Helper creates a new instance of the alchemy service.
+ */
+function _newAlchemy(config) {
+  return new AlchemyLanguageV1({
+    api_key: config.apikey
+  });
+}
+
+/** 
+ * The alchemy service wrapper factory.
+ * @param {Object} config Configuration for the service.
+ * @param {string} config.apikey 
+ * @param {string} config.extract 
+ * @param {string} config.url 
+ * @return {Function}
+ */
+module.exports = function create(config) {
+  var alchemy_language = module.exports.newAlchemy(config);
+
+  var parameters = {
+    text: '',
+    extract: config.extract,
+    url: 'https://www.ibm.com/us-en/',
+    outputMode: 'json'
+  };
+
+  var extract = function (text, cb) {
+    if (!cb) cb = noop;
+
+    parameters.anchorDate = new Date().toISOString()
+      .replace(/T/, ' ').replace(/\..+/, '');
+
+    parameters.text = text;
+
+    var doCombined = function (doneCombined) {
+      alchemy_language.combined(parameters, function (err, res) {
+        if (err) return doneCombined(err);
+
+        doneCombined(null, _.omit(res, ['status', 'usage']));
+      });
+    };
+
+    doCombined(function (err, res) {
+      if (err) return cb(err);
+
+      debug(inspect(res, false, 10));
+      cb(null, res);
+    });
+  };
+
+  return {
+    extract: extract
+  };
+};
+
+module.exports.newAlchemy = _newAlchemy;

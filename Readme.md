@@ -1,6 +1,6 @@
 servicekit
 ===========
-An assortment of useful service wrappers with a uniform initialisation and simplified client calls.
+An assortment of useful service wrappers with uniform initialisation and simplified client calls.
 
 
 Setup

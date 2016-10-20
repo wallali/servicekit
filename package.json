@@ -1,7 +1,7 @@
 {
   "name": "servicekit",
   "version": "0.0.1",
-  "description": "An assortment of useful service wrappers with a uniform initialisation interface.",
+  "description": "An assortment of useful service wrappers with uniform initialisation and simplified client calls.",
   "main": "index.js",
   "scripts": {
     "pretest": "npm install",

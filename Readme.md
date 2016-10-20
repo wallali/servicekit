@@ -2,6 +2,7 @@ servicekit
 ===========
 An assortment of useful service wrappers with uniform initialization and simplified client calls.
 
+[![Build Status](https://travis-ci.org/wallali/servicekit.svg?branch=master)](https://travis-ci.org/wallali/servicekit)
 
 Setup
 -----

@@ -1,6 +1,15 @@
 language: node_js
+
 node_js:
   - "node"
   - "5"
   - "4"
-  - "4.0.x"
+  - "4.0"
+
+script:
+- npm run lint
+- npm test
+
+cache:
+  directories:
+    - node_modules

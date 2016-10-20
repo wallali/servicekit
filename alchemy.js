@@ -36,7 +36,7 @@ function _newAlchemy(config) {
  * The alchemy service wrapper factory.
  * @param {Object} config Configuration for the service.
  * @param {string} config.apikey 
- * @param {string} config.extract 
+ * @param {string} config.extract Comma seperated list of fields to extract
  * @param {string} config.url 
  * @return {Function}
  */

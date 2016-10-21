@@ -125,6 +125,21 @@ describe('conversation service', function () {
       });
     });
 
+    it('Returns error if no workspace id', function (done) {
+      service_config.workspace_id = null;
+      conversation = conversation_factory(service_config);
+      conversation.message('some text', {}, function (e, r) {
+
+        assert(e);
+        assert(!r);
+
+        assert(!message_spy.called);
+        assert(e.message.match(/Cannot converse without a valid workspace id/i));
+
+        done();
+      });
+    });
+
     it('On null context passes empty context in payload', function (done) {
       err = {};
       conversation.message('some text', null, function (e, r) {

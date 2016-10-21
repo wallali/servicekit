@@ -24,19 +24,19 @@ var watson = require('watson-developer-cloud');
 var conversation_factory = require('../conversation');
 
 describe('conversation service', function () {
-  var workspace_id, service_config;
-  
+  var service_config;
+
   beforeEach(function () {
     service_config = {
       url: 'http://a.url',
       username: 'user',
       password: 'pass',
       version_date: '2016-07-11',
-      version: 'v1'
+      version: 'v1',
+      workspace_id: 'a6402fe8-5103-47ab-8722-5ebda9cd7363'
     };
-    workspace_id = 'a6402fe8-5103-47ab-8722-5ebda9cd7363';
   });
-  
+
   describe('factory', function () {
     var watson_mock;
 
@@ -58,7 +58,7 @@ describe('conversation service', function () {
         version: service_config.version
       });
 
-      conversation_factory(service_config, workspace_id);
+      conversation_factory(service_config);
 
       watson_conversation.verify();
     });
@@ -80,7 +80,7 @@ describe('conversation service', function () {
       sinon.stub(watson, 'conversation').returns(dummy_watson_conversation);
       message_spy = sinon.spy(dummy_watson_conversation, 'message');
 
-      conversation = conversation_factory(service_config, workspace_id);
+      conversation = conversation_factory(service_config);
     });
 
     afterEach(function () {
@@ -96,7 +96,7 @@ describe('conversation service', function () {
       conversation.message('some text', ctx, function (e, r) {
         assert(message_spy.calledOnce);
         assert(message_spy.calledWith({
-          workspace_id: workspace_id,
+          workspace_id: service_config.workspace_id,
           input: {
             text: 'some text'
           },
@@ -108,12 +108,29 @@ describe('conversation service', function () {
       });
     });
 
+    it('Passes supplied workspace_id in payload', function (done) {
+      err = {};
+      conversation.message('some text', {}, 'new_workspace', function (e, r) {
+        assert(message_spy.calledOnce);
+        assert(message_spy.calledWith({
+          workspace_id: 'new_workspace',
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: false,
+          context: {}
+        }));
+
+        done();
+      });
+    });
+
     it('On null context passes empty context in payload', function (done) {
       err = {};
       conversation.message('some text', null, function (e, r) {
         assert(message_spy.calledOnce);
         assert(message_spy.calledWith({
-          workspace_id: workspace_id,
+          workspace_id: service_config.workspace_id,
           input: {
             text: 'some text'
           },
@@ -168,6 +185,7 @@ describe('conversation service', function () {
       conversation.message('some text', {}, function (e, r) {
         assert(message_spy.calledOnce);
         assert(e, 'Error should not be null');
+        assert(!r);
         assert.deepStrictEqual(e.innerError, result.output.error);
 
         done();

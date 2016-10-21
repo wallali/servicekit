@@ -18,6 +18,7 @@
 
 var watson = require('watson-developer-cloud');
 var debug = require('debug')('servicekit:conversation');
+var noop = function () {};
 
 /** 
  * The conversation service wrapper factory.
@@ -27,10 +28,10 @@ var debug = require('debug')('servicekit:conversation');
  * @param {string} config.password 
  * @param {string} config.version_date 
  * @param {string} config.version 
- * @param {string} workspace_id Workspace Id for dialog service.
+ * @param {string} config.workspace_id Workspace Id for dialog service, optional.
  * @return {Function}
  */
-module.exports = function create(config, workspace_id) {
+module.exports = function create(config) {
   var wtsn_conversation = watson.conversation({
     url: config.url,
     username: config.username || '<username>',
@@ -39,11 +40,27 @@ module.exports = function create(config, workspace_id) {
     version: config.version
   });
 
-  var message = function (text, context, cb) {
+  var message = function (text, context, workspaceId, cb) {
+    if (typeof (workspaceId) === 'function') {
+      cb = workspaceId;
+      workspaceId = config.workspace_id;
+      debug('Using workspace id from config', workspaceId);
+    }
+
+    if (!cb) cb = noop;
+
+    if (!workspaceId) {
+      return process.nextTick(
+        function () {
+          return cb(new Error('Cannot converse without a valid workspace id.'));
+        }
+      );
+    }
+
     var ctx = context || {};
 
     var payload = {
-      workspace_id: workspace_id,
+      workspace_id: workspaceId,
       input: {
         text: text
       },
@@ -57,12 +74,11 @@ module.exports = function create(config, workspace_id) {
         err.innerError = result.output.error;
       }
 
-      if (err) debug(err);
-      else debug('Conversation result:', result);
+      if (err) return cb(err);
 
-      if (cb) {
-        cb(err, result);
-      }
+      debug('Conversation result:', result);
+
+      cb(null, result);
     };
 
     wtsn_conversation.message(payload, callback);

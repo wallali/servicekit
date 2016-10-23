@@ -19,3 +19,4 @@
 exports.conversation = require('./conversation');
 exports.retrieve_rank = require('./retrieve-rank');
 exports.alchemy = require('./alchemy');
+exports.wit = require('./wit');

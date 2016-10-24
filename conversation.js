@@ -28,7 +28,7 @@ var noop = function () {};
  * @param {string} config.password 
  * @param {string} config.version_date 
  * @param {string} config.version 
- * @param {string} config.workspace_id Workspace Id for dialog service, optional.
+ * @param {string} [config.workspace_id] Workspace Id for dialog service.
  * @return {Function}
  */
 module.exports = function create(config) {

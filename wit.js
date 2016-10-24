@@ -24,8 +24,8 @@ var debug = require('debug')('servicekit:wit');
  * The wit service wrapper factory.
  * @param {Object} config Configuration for the wit service.
  * @param {string} config.accessToken Wit access token for your app.
- * @param {string} config.apiVersion, optional
- * @param {string} config.userTimezone, optional. Canonical timezone (http://joda-time.sourceforge.net/timezones.html) 
+ * @param {string} [config.apiVersion]
+ * @param {string} [config.userTimezone] Canonical timezone (http://joda-time.sourceforge.net/timezones.html) 
  * @return {Function}
  */
 module.exports = function create(config) {

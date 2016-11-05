@@ -52,7 +52,7 @@ module.exports = function create(config) {
     if (!workspaceId) {
       return process.nextTick(
         function () {
-          return cb(new Error('Cannot converse without a valid workspace id.'));
+          return cb(new Error('A valid workspace id is required.'));
         }
       );
     }

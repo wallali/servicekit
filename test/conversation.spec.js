@@ -134,7 +134,7 @@ describe('conversation service', function () {
         assert(!r);
 
         assert(!message_spy.called);
-        assert(e.message.match(/Cannot converse without a valid workspace id/i));
+        assert(e.message.match(/A valid workspace id is required/i));
 
         done();
       });

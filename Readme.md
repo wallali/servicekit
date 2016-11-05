@@ -27,26 +27,36 @@ alchemy.extract('text', function(err, result){
 });
 ```
 
+Services
+--------
+The following services are presently in the kit:
+
+- Conversation (https://www.ibm.com/watson/developercloud/conversation.html)
+- Retrieve and Rank (https://www.ibm.com/watson/developercloud/retrieve-rank.html)
+- Alchemy (https://www.ibm.com/watson/developercloud/alchemy-language.html)
+- Wit (http://wit.ai)
+- Bing Spell Check (https://www.microsoft.com/cognitive-services/en-us/bing-spell-check-api/documentation)
+
 Configure Local Dev Environment
 ---------------------------
 ### Step 1: Get the Code
 
 First, you'll need to pull down the code from GitHub:
-```sh
+```
 git clone https://github.com/wallali/servicekit.git
 ```
 
 ### Step 2: Install Dependencies
 
 Second, you'll need to install the project dependencies as well as the dev dependencies. To do this, simply run the following from the directory you created in step 1:
-```sh
+```
 npm install
 ```
 
 ### Step 3: Running Tests
 
 With your local environment configured, running tests is as simple as:
-```sh
+```
 npm test
 ```
 
@@ -54,7 +64,8 @@ Debugging
 ---------
 
 `servicekit` uses the [debug module](https://github.com/visionmedia/debug) to output debug messages to the console. To output all debug messages, run your node app with the `DEBUG` environment variable:
-```sh
+
+```
 DEBUG=servicekit:* node your-app.js
 ```
 This will output debugging messages from `servicekit`.

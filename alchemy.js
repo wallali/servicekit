@@ -16,12 +16,11 @@
 
 'use strict';
 
-var inspect = require('util').inspect;
-var AlchemyLanguageV1 = require('watson-developer-cloud/alchemy-language/v1');
-var _ = require('lodash');
-
-var debug = require('debug')('servicekit:alchemy');
-var noop = function () {};
+const inspect = require('util').inspect;
+const AlchemyLanguageV1 = require('watson-developer-cloud/alchemy-language/v1');
+const _ = require('lodash');
+const debug = require('debug')('servicekit:alchemy');
+const noop = function () {};
 
 /**
  * Helper creates a new instance of the alchemy service.

@@ -1,6 +1,12 @@
 Major Revisions
 ===============
 
+0.2.1 / 2016-11-05
+------------------
+
+-	Modernise conversation and wit services. Further simplify their interface
+
+
 0.2.0 / 2016-11-05
 ------------------
 

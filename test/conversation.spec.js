@@ -18,10 +18,10 @@
 
 'use strict';
 
-var assert = require('assert');
-var sinon = require('sinon');
-var watson = require('watson-developer-cloud');
-var conversation_factory = require('../conversation');
+const assert = require('assert');
+const sinon = require('sinon');
+const watson = require('watson-developer-cloud');
+const conversation_factory = require('../conversation');
 
 describe('conversation service', function () {
   var service_config;
@@ -93,7 +93,7 @@ describe('conversation service', function () {
       var ctx = {
         conversation_id: 'df8ec57a-cd89-4d4f-af89-a58af58f974b'
       };
-      conversation.message('some text', ctx, function (e, r) {
+      conversation('some text', ctx, function (e, r) {
         assert(message_spy.calledOnce);
         assert(message_spy.calledWith({
           workspace_id: service_config.workspace_id,
@@ -110,7 +110,7 @@ describe('conversation service', function () {
 
     it('Passes supplied workspace_id in payload', function (done) {
       err = {};
-      conversation.message('some text', {}, 'new_workspace', function (e, r) {
+      conversation('some text', {}, 'new_workspace', function (e, r) {
         assert(message_spy.calledOnce);
         assert(message_spy.calledWith({
           workspace_id: 'new_workspace',
@@ -128,7 +128,7 @@ describe('conversation service', function () {
     it('Returns error if no workspace id', function (done) {
       service_config.workspace_id = null;
       conversation = conversation_factory(service_config);
-      conversation.message('some text', {}, function (e, r) {
+      conversation('some text', {}, function (e, r) {
 
         assert(e);
         assert(!r);
@@ -142,7 +142,7 @@ describe('conversation service', function () {
 
     it('On null context passes empty context in payload', function (done) {
       err = {};
-      conversation.message('some text', null, function (e, r) {
+      conversation('some text', null, function (e, r) {
         assert(message_spy.calledOnce);
         assert(message_spy.calledWith({
           workspace_id: service_config.workspace_id,
@@ -163,7 +163,7 @@ describe('conversation service', function () {
           text: ['Which room would you like to paint?']
         }
       };
-      conversation.message('some text', {}, function (e, r) {
+      conversation('some text', {}, function (e, r) {
         assert(message_spy.calledOnce);
 
         assert(!e, 'Error should be null');
@@ -178,7 +178,7 @@ describe('conversation service', function () {
       err = {
         message: 'an error'
       };
-      conversation.message('some text', {}, function (e, r) {
+      conversation('some text', {}, function (e, r) {
         assert(message_spy.calledOnce);
 
         assert(e, 'Error should not be null');
@@ -197,7 +197,7 @@ describe('conversation service', function () {
           }
         }
       };
-      conversation.message('some text', {}, function (e, r) {
+      conversation('some text', {}, function (e, r) {
         assert(message_spy.calledOnce);
         assert(e, 'Error should not be null');
         assert(!r);

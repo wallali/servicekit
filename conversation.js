@@ -16,9 +16,14 @@
 
 'use strict';
 
-var watson = require('watson-developer-cloud');
-var debug = require('debug')('servicekit:conversation');
-var noop = function () {};
+const watson = require('watson-developer-cloud');
+const debug = require('debug')('servicekit:conversation');
+const deprecate = require('deprecate');
+const noop = function () {};
+
+exports = module.exports = create;
+
+//--
 
 /** 
  * The conversation service wrapper factory.
@@ -29,10 +34,10 @@ var noop = function () {};
  * @param {string} config.version_date 
  * @param {string} config.version 
  * @param {string} [config.workspace_id] Workspace Id for dialog service.
- * @return {Object}
+ * @return {Function}
  */
-module.exports = function create(config) {
-  var wtsn_conversation = watson.conversation({
+function create(config) {
+  var watsonConverse = watson.conversation({
     url: config.url,
     username: config.username || '<username>',
     password: config.password || '<password>',
@@ -40,7 +45,16 @@ module.exports = function create(config) {
     version: config.version
   });
 
-  var message = function (text, context, workspaceId, cb) {
+  message.message = function (text, context, workspaceId, cb) {
+    deprecate('The .message() operation is deprecated since version 0.2.1. Instead you should use the parent directly. It has the same signature.');
+    return message(text, context, workspaceId, cb);
+  };
+
+  return message;
+
+  //--
+
+  function message(text, context, workspaceId, cb) {
     if (typeof (workspaceId) === 'function') {
       cb = workspaceId;
       workspaceId = config.workspace_id;
@@ -50,11 +64,7 @@ module.exports = function create(config) {
     if (!cb) cb = noop;
 
     if (!workspaceId) {
-      return process.nextTick(
-        function () {
-          return cb(new Error('A valid workspace id is required.'));
-        }
-      );
+      return process.nextTick(() => cb(new Error('A valid workspace id is required.')));
     }
 
     var ctx = context || {};
@@ -68,7 +78,11 @@ module.exports = function create(config) {
       context: ctx
     };
 
-    var callback = function (err, result) {
+    watsonConverse.message(payload, callback);
+
+    //--
+
+    function callback(err, result) {
       if (!err && result.output.error) {
         err = new Error('Watson result errored. See innerError for details.');
         err.innerError = result.output.error;
@@ -79,12 +93,6 @@ module.exports = function create(config) {
       debug('Conversation result:', result);
 
       cb(null, result);
-    };
-
-    wtsn_conversation.message(payload, callback);
-  };
-
-  return {
-    message: message
-  };
-};
+    }
+  }
+}

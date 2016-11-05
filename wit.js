@@ -19,6 +19,11 @@
 const request = require('request');
 const noop = function () {};
 const debug = require('debug')('servicekit:wit');
+const deprecate = require('deprecate');
+
+exports = module.exports = create;
+
+//--
 
 /** 
  * The wit service factory.
@@ -26,13 +31,22 @@ const debug = require('debug')('servicekit:wit');
  * @param {string} config.accessToken Wit access token for your app.
  * @param {string} [config.apiVersion]
  * @param {string} [config.userTimezone] Canonical timezone (http://joda-time.sourceforge.net/timezones.html) 
- * @return {Object}
+ * @return {Function}
  */
-module.exports = function create(config) {
+function create(config) {
 
   var apiVersion = config.apiVersion || '20160516';
 
-  var message = function (text, context, cb) {
+  message.message = function (text, context, cb) {
+    deprecate('The .message() operation is deprecated since version 0.2.1. Instead you should use the parent directly. It has the same signature.');
+    return message(text, context, cb);
+  };
+
+  return message;
+
+  //--
+
+  function message(text, context, cb) {
     if (typeof (context) === 'function') {
       cb = context;
       context = {};
@@ -46,20 +60,6 @@ module.exports = function create(config) {
       ctx.timezone = config.userTimezone;
       debug('Setting timezone in context', config.userTimezone);
     }
-
-    var handleResponse = function (error, response, body) {
-      if (error) return cb(error);
-
-      if (response.statusCode !== 200) {
-        let err = new Error('Unexpected response status ' + response.statusCode);
-        if (body && body.error) {
-          err.message = body.error;
-        }
-        return cb(err);
-      }
-
-      cb(null, body);
-    };
 
     let options = {
       url: 'https://api.wit.ai/message',
@@ -76,9 +76,21 @@ module.exports = function create(config) {
     };
 
     request.get(options, handleResponse).auth(null, null, true, config.accessToken);
-  };
 
-  return {
-    message: message
-  };
-};
+    //--
+    
+    function handleResponse(error, response, body) {
+      if (error) return cb(error);
+
+      if (response.statusCode !== 200) {
+        let err = new Error('Unexpected response status ' + response.statusCode);
+        if (body && body.error) {
+          err.message = body.error;
+        }
+        return cb(err);
+      }
+
+      cb(null, body);
+    }
+  }
+}

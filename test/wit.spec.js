@@ -62,7 +62,7 @@ describe('wit', function () {
 
     const wit = factory(config);
 
-    wit.message('sample message', context, function (e, r) {
+    wit('sample message', context, function (e, r) {
       assert(r);
       assert(!e);
 
@@ -83,7 +83,7 @@ describe('wit', function () {
 
     const wit = factory(config);
 
-    wit.message('sample message', function (e, r) {
+    wit('sample message', function (e, r) {
       assert(r);
       assert(!e);
 
@@ -104,7 +104,7 @@ describe('wit', function () {
 
     const wit = factory(config);
 
-    wit.message('sample message', context, function (e, r) {
+    wit('sample message', context, function (e, r) {
       assert(r);
       assert(!e);
 
@@ -128,7 +128,7 @@ describe('wit', function () {
 
     const wit = factory(config);
 
-    wit.message('message', context, function (e, r) {
+    wit('message', context, function (e, r) {
       assert(r);
       assert(!e);
 
@@ -149,7 +149,7 @@ describe('wit', function () {
 
     const wit = factory(config);
 
-    wit.message('message', context, function (e, r) {
+    wit('message', context, function (e, r) {
       assert(r);
       assert(!e);
 
@@ -171,7 +171,7 @@ describe('wit', function () {
     const wit = factory(config);
 
     context.timezone = 'newtime';
-    wit.message('message', context, function (e, r) {
+    wit('message', context, function (e, r) {
       assert(r);
       assert(!e);
 
@@ -190,7 +190,7 @@ describe('wit', function () {
 
     const wit = factory(config);
 
-    wit.message('sample message', context, function (e, r) {
+    wit('sample message', context, function (e, r) {
       assert(!r);
       assert(e);
 
@@ -212,7 +212,7 @@ describe('wit', function () {
 
     const wit = factory(config);
 
-    wit.message('sample message', context, function (e, r) {
+    wit('sample message', context, function (e, r) {
       assert(!r);
       assert(e);
 
@@ -232,7 +232,7 @@ describe('wit', function () {
 
     const wit = factory(config);
 
-    wit.message('sample message', context, function (e, r) {
+    wit('sample message', context, function (e, r) {
       assert(!r);
       assert(e);
 

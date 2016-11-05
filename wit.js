@@ -26,7 +26,7 @@ const debug = require('debug')('servicekit:wit');
  * @param {string} config.accessToken Wit access token for your app.
  * @param {string} [config.apiVersion]
  * @param {string} [config.userTimezone] Canonical timezone (http://joda-time.sourceforge.net/timezones.html) 
- * @return {Function}
+ * @return {Object}
  */
 module.exports = function create(config) {
 

@@ -29,7 +29,7 @@ var noop = function () {};
  * @param {string} config.version_date 
  * @param {string} config.version 
  * @param {string} [config.workspace_id] Workspace Id for dialog service.
- * @return {Function}
+ * @return {Object}
  */
 module.exports = function create(config) {
   var wtsn_conversation = watson.conversation({

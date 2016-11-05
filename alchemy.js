@@ -38,7 +38,7 @@ function _newAlchemy(config) {
  * @param {string} config.apikey 
  * @param {string} config.extract Comma seperated list of fields to extract
  * @param {string} config.url 
- * @return {Function}
+ * @return {Object}
  */
 module.exports = function create(config) {
   var alchemy_language = module.exports.newAlchemy(config);

@@ -39,7 +39,7 @@ function _newRnR(config) {
  * @param {string} config.collection_name Solr collection name
  * @param {string} config.ranker_id Watson ranker id, optional
  * @param {string} config.row_count Count of rows to return, optional
- * @return {Function}
+ * @return {Object}
  */
 module.exports = function create(config) {
   var retrieve = module.exports.newRnR(config);

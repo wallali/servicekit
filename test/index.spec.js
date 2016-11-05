@@ -16,8 +16,15 @@
 
 'use strict';
 
-exports.conversation = require('./conversation');
-exports.retrieve_rank = require('./retrieve-rank');
-exports.alchemy = require('./alchemy');
-exports.wit = require('./wit');
-exports.bingspell = require('./bingspell');
+const assert = require('assert');
+const servicekit = require('..');
+
+describe('index', function () {
+  it('Imports all sub modules', function () {
+    assert(servicekit.wit);
+    assert(servicekit.bingspell);
+    assert(servicekit.retrieve_rank);
+    assert(servicekit.conversation);
+    assert(servicekit.alchemy);
+  });
+});

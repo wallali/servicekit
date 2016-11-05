@@ -18,7 +18,7 @@
 
 const assert = require('assert');
 const nock = require('nock');
-var factory = require('../wit');
+const factory = require('../wit');
 
 describe('wit', function () {
 
@@ -53,14 +53,14 @@ describe('wit', function () {
 
   it('calls /message', function (done) {
 
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .get('/message')
       .query(function (q) {
         return q.q === 'sample message';
       })
       .reply(200, {});
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     wit.message('sample message', context, function (e, r) {
       assert(r);
@@ -74,14 +74,14 @@ describe('wit', function () {
 
   it('calls /message and callbacks when no context supplied', function (done) {
     config.userTimezone = null;
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .get('/message')
       .query(function (q) {
         return q.context === '{}';
       })
       .reply(200, {});
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     wit.message('sample message', function (e, r) {
       assert(r);
@@ -95,14 +95,14 @@ describe('wit', function () {
 
   it('uses correct headers', function (done) {
 
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .matchHeader('accept', 'application/vnd.wit.20160516+json')
       .matchHeader('authorization', 'Bearer FBACCESSTOKEN')
       .get('/message')
       .query(true)
       .reply(200, {});
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     wit.message('sample message', context, function (e, r) {
       assert(r);
@@ -119,14 +119,14 @@ describe('wit', function () {
     config.apiVersion = '010101';
     config.userTimezone = null;
 
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .get('/message')
       .query(function (q) {
         return q.v === config.apiVersion;
       })
       .reply(200, {});
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     wit.message('message', context, function (e, r) {
       assert(r);
@@ -140,14 +140,14 @@ describe('wit', function () {
 
   it('uses userTimezone from config', function (done) {
 
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .get('/message')
       .query(function (q) {
         return q.context === '{"timezone":"Europe/London"}';
       })
       .reply(200, {});
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     wit.message('message', context, function (e, r) {
       assert(r);
@@ -161,14 +161,14 @@ describe('wit', function () {
 
   it('uses userTimezone from context', function (done) {
 
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .get('/message')
       .query(function (q) {
         return q.context === '{"timezone":"newtime"}';
       })
       .reply(200, {});
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     context.timezone = 'newtime';
     wit.message('message', context, function (e, r) {
@@ -183,12 +183,12 @@ describe('wit', function () {
 
   it('on error returns error', function (done) {
 
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .get('/message')
       .query(true)
       .replyWithError('not found');
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     wit.message('sample message', context, function (e, r) {
       assert(!r);
@@ -203,14 +203,14 @@ describe('wit', function () {
 
   it('on error returns error detail', function (done) {
 
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .get('/message')
       .query(true)
       .reply(400, {
         error: 'error detail'
       });
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     wit.message('sample message', context, function (e, r) {
       assert(!r);
@@ -225,12 +225,12 @@ describe('wit', function () {
 
   it('treats non 200 response as error', function (done) {
 
-    let scope = nock(witUrl)
+    var scope = nock(witUrl)
       .get('/message')
       .query(true)
       .reply(400, {});
 
-    let wit = factory(config);
+    const wit = factory(config);
 
     wit.message('sample message', context, function (e, r) {
       assert(!r);

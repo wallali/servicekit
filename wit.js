@@ -18,10 +18,10 @@
 
 const request = require('request');
 const noop = function () {};
-var debug = require('debug')('servicekit:wit');
+const debug = require('debug')('servicekit:wit');
 
 /** 
- * The wit service wrapper factory.
+ * The wit service factory.
  * @param {Object} config Configuration for the wit service.
  * @param {string} config.accessToken Wit access token for your app.
  * @param {string} [config.apiVersion]

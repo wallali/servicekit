@@ -18,7 +18,6 @@
 
 const watson = require('watson-developer-cloud');
 const debug = require('debug')('servicekit:conversation');
-const deprecate = require('deprecate');
 const noop = function () {};
 
 exports = module.exports = create;
@@ -44,11 +43,6 @@ function create(config) {
     version_date: config.version_date,
     version: config.version
   });
-
-  message.message = function (text, context, workspaceId, cb) {
-    deprecate('The .message() operation is deprecated since version 0.2.1. Instead you should use the parent directly. It has the same signature.');
-    return message(text, context, workspaceId, cb);
-  };
 
   return message;
 

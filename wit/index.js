@@ -16,17 +16,5 @@
 
 'use strict';
 
-const assert = require('assert');
-const servicekit = require('..');
-
-describe('index', function () {
-  it('Imports all sub modules', function () {
-    assert(servicekit.wit);
-    assert(servicekit.wit.message);
-    assert(servicekit.wit.converse);
-    assert(servicekit.bingspell);
-    assert(servicekit.retrieve_rank);
-    assert(servicekit.conversation);
-    assert(servicekit.alchemy);
-  });
-});
+exports.message = require('./message.js');
+exports.converse = require('./converse.js');

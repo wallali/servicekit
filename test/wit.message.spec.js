@@ -18,9 +18,9 @@
 
 const assert = require('assert');
 const nock = require('nock');
-const factory = require('../wit');
+const factory = require('../wit/message');
 
-describe('wit', function () {
+describe('wit.message', function () {
 
   before(function () {
     nock.disableNetConnect();
@@ -84,6 +84,27 @@ describe('wit', function () {
     const wit = factory(config);
 
     wit('sample message', function (e, r) {
+      assert(r);
+      assert(!e);
+
+      assert(scope.isDone());
+
+      done();
+    });
+  });
+
+  it('always calls /message with valid context', function (done) {
+    config.userTimezone = null;
+    var scope = nock(witUrl)
+      .get('/message')
+      .query(function (q) {
+        return q.context === '{}';
+      })
+      .reply(200, {});
+
+    const wit = factory(config);
+
+    wit('sample message', null, function (e, r) {
       assert(r);
       assert(!e);
 

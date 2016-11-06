@@ -17,9 +17,7 @@
 'use strict';
 
 const request = require('request');
-const noop = function () {};
 const debug = require('debug')('servicekit:wit');
-const deprecate = require('deprecate');
 
 exports = module.exports = create;
 
@@ -33,52 +31,50 @@ exports = module.exports = create;
  * @param {string} [config.userTimezone] Canonical timezone (http://joda-time.sourceforge.net/timezones.html) 
  * @return {Function}
  */
-function create(config) {
+function create(config, operation, method) {
+
+  const wit_endpoint = 'https://api.wit.ai';
 
   var apiVersion = config.apiVersion || '20160516';
-
-  message.message = function (text, context, cb) {
-    deprecate('The .message() operation is deprecated since version 0.2.1. Instead you should use the parent directly. It has the same signature.');
-    return message(text, context, cb);
-  };
-
-  return message;
+  
+  return callwit;
 
   //--
 
-  function message(text, context, cb) {
-    if (typeof (context) === 'function') {
-      cb = context;
-      context = {};
-    }
-
-    if (!cb) cb = noop;
-
-    var ctx = context || {};
+  /**
+   * @param {Object} ctx The conversation context
+   * @param {Object} qs The query string params
+   * @param {Function} cb Callback
+   */
+  function callwit(ctx, qs, cb) {
 
     if (config.userTimezone && !ctx.timezone && !ctx.reference_time) {
       ctx.timezone = config.userTimezone;
       debug('Setting timezone in context', config.userTimezone);
     }
 
+    qs.v = apiVersion;
+
     let options = {
-      url: 'https://api.wit.ai/message',
-      method: 'GET',
+      url: wit_endpoint + operation,
+      method: method,
       json: true,
-      qs: {
-        v: apiVersion,
-        q: text,
-        context: JSON.stringify(ctx)
-      },
+      qs: qs,
       headers: {
         'Accept': 'application/vnd.wit.' + apiVersion + '+json'
       }
     };
 
-    request.get(options, handleResponse).auth(null, null, true, config.accessToken);
+    if (method === 'GET') {
+      qs.context = JSON.stringify(ctx);
+    } else {
+      options.body = ctx;
+    }
+
+    request(options, handleResponse).auth(null, null, true, config.accessToken);
 
     //--
-    
+
     function handleResponse(error, response, body) {
       if (error) return cb(error);
 

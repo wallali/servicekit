@@ -22,6 +22,11 @@ const _ = require('lodash');
 const debug = require('debug')('servicekit:alchemy');
 const noop = function () {};
 
+exports = module.exports = create;
+exports.newAlchemy = _newAlchemy;
+
+//--
+
 /**
  * Helper creates a new instance of the alchemy service.
  */
@@ -36,11 +41,11 @@ function _newAlchemy(config) {
  * @param {Object} config Configuration for the service.
  * @param {string} config.apikey 
  * @param {string} config.extract Comma seperated list of fields to extract
- * @param {string} config.url 
+ * @param {boolean} [config.ignore_unsupported_lang] Ignore errors from alchemy if the relate to the input language being unsupported.
  * @return {Object}
  */
-module.exports = function create(config) {
-  var alchemy_language = module.exports.newAlchemy(config);
+function create(config) {
+  var alchemy_language = exports.newAlchemy(config);
 
   var parameters = {
     text: '',
@@ -49,7 +54,15 @@ module.exports = function create(config) {
     outputMode: 'json'
   };
 
-  var extract = function (text, cb) {
+  var ignore_unsupported_lang = config.ignore_unsupported_lang || false;
+
+  return {
+    extract: extract
+  };
+
+  //--
+
+  function extract(text, cb) {
     if (!cb) cb = noop;
 
     parameters.anchorDate = new Date().toISOString()
@@ -57,25 +70,27 @@ module.exports = function create(config) {
 
     parameters.text = text;
 
-    var doCombined = function (doneCombined) {
-      alchemy_language.combined(parameters, function (err, res) {
-        if (err) return doneCombined(err);
-
-        doneCombined(null, _.omit(res, ['status', 'usage']));
-      });
-    };
-
-    doCombined(function (err, res) {
-      if (err) return cb(err);
+    doCombined(parameters, function (err, res) {
+      if (err) {
+        if (ignore_unsupported_lang && err.code && err.statusInfo &&
+          err.code === 400 && err.statusInfo.match(/unsupported-text-language/i)) {
+          debug('Ignored Alchemy error %d - %s for input %s', err.code, err.statusInfo, text);
+          res = {};
+        } else {
+          return cb(err);
+        }
+      }
 
       debug(inspect(res, false, 10));
       cb(null, res);
     });
-  };
+  }
 
-  return {
-    extract: extract
-  };
-};
+  function doCombined(parameters, doneCombined) {
+    alchemy_language.combined(parameters, function (err, res) {
+      if (err) return doneCombined(err);
 
-module.exports.newAlchemy = _newAlchemy;
+      doneCombined(null, _.omit(res, ['status', 'usage']));
+    });
+  }
+}

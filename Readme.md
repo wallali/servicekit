@@ -36,6 +36,7 @@ The following services are presently in the kit:
 - Alchemy (https://www.ibm.com/watson/developercloud/alchemy-language.html)
 - Wit (http://wit.ai)
 - Bing Spell Check (https://www.microsoft.com/cognitive-services/en-us/bing-spell-check-api/documentation)
+- Tone Analyzer (https://www.ibm.com/watson/developercloud/doc/tone-analyzer/)
 
 Configure Local Dev Environment
 ---------------------------

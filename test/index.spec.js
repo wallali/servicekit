@@ -28,5 +28,6 @@ describe('index', function () {
     assert(servicekit.retrieve_rank);
     assert(servicekit.conversation);
     assert(servicekit.alchemy);
+    assert(servicekit.tone_analyzer);
   });
 });

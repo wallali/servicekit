@@ -21,3 +21,4 @@ exports.retrieve_rank = require('./retrieve-rank');
 exports.alchemy = require('./alchemy');
 exports.wit = require('./wit');
 exports.bingspell = require('./bingspell');
+exports.tone_analyzer = require('./tone-analyzer');

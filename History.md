@@ -1,6 +1,12 @@
 Major Revisions
 ===============
 
+1.2.0 / 2016-12-19
+------------------
+
+- Added support for IBM Watson Tone Analyzer service
+
+
 1.0.0 / 2016-11-06
 ------------------
 

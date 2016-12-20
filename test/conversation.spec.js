@@ -154,6 +154,46 @@ describe('conversation service', function () {
       });
     });
 
+    it('Adds config timezone to context', function (done) {
+      service_config.userTimezone = 'Europe/London';
+      conversation = conversation_factory(service_config);
+      conversation('some text', {}, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
+          workspace_id: service_config.workspace_id,
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: false,
+          context: {
+            timezone: 'Europe/London'
+          }
+        }));
+
+        done();
+      });
+    });
+
+    it('Ignores config timezone if context timezone supplied', function (done) {
+      service_config.userTimezone = 'Europe/London';
+      conversation = conversation_factory(service_config);
+      conversation('some text', { timezone: 'Etc/GMT' }, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
+          workspace_id: service_config.workspace_id,
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: false,
+          context: {
+            timezone: 'Etc/GMT'
+          }
+        }));
+
+        done();
+      });
+    });
+
     it('Passes results to callback when no error', function (done) {
       conversation_result.output = {
         text: ['Which room would you like to paint?']
@@ -200,6 +240,6 @@ describe('conversation service', function () {
         done();
       });
     });
-    
+
   });
 });

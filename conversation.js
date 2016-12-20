@@ -43,6 +43,7 @@ function _newConversation(config) {
  * @param {string} config.password 
  * @param {string} [config.version_date] Defaults to 2016-09-20.
  * @param {string} [config.workspace_id] Workspace Id for dialog service.
+ * @param {string} [config.userTimezone] A supported timezone string (https://www.ibm.com/watson/developercloud/doc/conversation/supported-timezones.html) 
  * @return {Function}
  */
 function create(config) {
@@ -58,7 +59,6 @@ function create(config) {
     if (typeof (workspaceId) === 'function') {
       cb = workspaceId;
       workspaceId = config.workspace_id;
-      debug('Using workspace id from config', workspaceId);
     }
 
     if (!cb) cb = noop;
@@ -67,7 +67,14 @@ function create(config) {
       return process.nextTick(() => cb(new Error('A valid workspace id is required.')));
     }
 
+    debug('Using workspace id %s', workspaceId);
+
     var ctx = context || {};
+
+    if (config.userTimezone && !ctx.timezone) {
+      ctx.timezone = config.userTimezone;
+      debug('Setting timezone in context', config.userTimezone);
+    }
 
     var payload = {
       workspace_id: workspaceId,

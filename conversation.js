@@ -16,33 +16,39 @@
 
 'use strict';
 
-const watson = require('watson-developer-cloud');
+const ConversationV1 = require('watson-developer-cloud/conversation/v1');
 const debug = require('debug')('servicekit:conversation');
-const noop = function () {};
+const noop = () => 0;
 
 exports = module.exports = create;
+exports.newConversation = _newConversation;
 
 //--
+
+/**
+ * Helper creates a new instance of the watson service.
+ */
+function _newConversation(config) {
+  return new ConversationV1({
+    username: config.username,
+    password: config.password,
+    version_date: config.version_date
+  });
+}
 
 /** 
  * The conversation service wrapper factory.
  * @param {Object} config Configuration for the dialog service.
- * @param {string} config.url 
  * @param {string} config.username 
  * @param {string} config.password 
- * @param {string} config.version_date 
- * @param {string} config.version 
+ * @param {string} [config.version_date] Defaults to 2016-09-20.
  * @param {string} [config.workspace_id] Workspace Id for dialog service.
  * @return {Function}
  */
 function create(config) {
-  var watsonConverse = watson.conversation({
-    url: config.url,
-    username: config.username || '<username>',
-    password: config.password || '<password>',
-    version_date: config.version_date,
-    version: config.version
-  });
+  config.version_date = config.version_date || ConversationV1.VERSION_DATE_2016_09_20;
+
+  var watsonConverse = exports.newConversation(config);
 
   return message;
 

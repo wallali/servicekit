@@ -14,88 +14,87 @@
  * limitations under the License.
  */
 
-/* eslint-disable no-unused-vars */
-
 'use strict';
 
 const assert = require('assert');
 const sinon = require('sinon');
-const watson = require('watson-developer-cloud');
 const conversation_factory = require('../conversation');
 
 describe('conversation service', function () {
   var service_config;
+  var fake_conversation;
+  var conversation_result;
 
   beforeEach(function () {
     service_config = {
-      url: 'http://a.url',
       username: 'user',
       password: 'pass',
-      version_date: '2016-07-11',
-      version: 'v1',
       workspace_id: 'a6402fe8-5103-47ab-8722-5ebda9cd7363'
     };
+    conversation_result = { output: {} };
+
+    fake_conversation = {
+      message: sinon.stub()
+    };
+
+    fake_conversation.message.callsArgWith(1, null, conversation_result);
+  });
+
+  afterEach(function () {
+    fake_conversation.message.reset();
   });
 
   describe('factory', function () {
-    var watson_mock;
-
     beforeEach(function () {
-      watson_mock = sinon.mock(watson);
+      sinon.spy(conversation_factory, 'newConversation');
     });
 
     afterEach(function () {
-      watson_mock.restore();
+      conversation_factory.newConversation.restore();
     });
 
     it('Creates watson conversation using config params', function () {
-      var watson_conversation = watson_mock.expects('conversation');
-      watson_conversation.once().withExactArgs({
-        url: service_config.url,
-        username: service_config.username,
-        password: service_config.password,
-        version_date: service_config.version_date,
-        version: service_config.version
-      });
-
+      service_config.version_date = 'a date';
       conversation_factory(service_config);
 
-      watson_conversation.verify();
+      assert(conversation_factory.newConversation.calledOnce);
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].username, service_config.username);
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].password, service_config.password);
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, 'a date');
+
+    });
+
+    it('Creates watson conversation using config params and default version date', function () {
+      conversation_factory(service_config);
+
+      assert(conversation_factory.newConversation.calledOnce);
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].username, service_config.username);
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].password, service_config.password);
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, '2016-09-20');
+
     });
   });
 
   describe('message()', function () {
-    var result, err;
-    var dummy_watson_conversation = {
-      message: function (payload, callback) {
-        callback(err, result);
-      }
-    };
 
-    var message_spy, conversation;
+
+    conversation_factory.newConversation = () => fake_conversation;
+
+    var message, conversation;
     beforeEach(function () {
-      err = null;
-      result = null;
 
-      sinon.stub(watson, 'conversation').returns(dummy_watson_conversation);
-      message_spy = sinon.spy(dummy_watson_conversation, 'message');
+      message = fake_conversation.message;
 
       conversation = conversation_factory(service_config);
     });
 
-    afterEach(function () {
-      watson.conversation.restore();
-      message_spy.restore();
-    });
-
     it('Passes supplied text and context in payload', function (done) {
-      err = {};
       var ctx = {
         conversation_id: 'df8ec57a-cd89-4d4f-af89-a58af58f974b'
       };
-      conversation('some text', ctx, function (e, r) {
-        assert(message_spy.calledOnce);
-        assert(message_spy.calledWith({
+      conversation('some text', ctx, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
           workspace_id: service_config.workspace_id,
           input: {
             text: 'some text'
@@ -109,10 +108,9 @@ describe('conversation service', function () {
     });
 
     it('Passes supplied workspace_id in payload', function (done) {
-      err = {};
-      conversation('some text', {}, 'new_workspace', function (e, r) {
-        assert(message_spy.calledOnce);
-        assert(message_spy.calledWith({
+      conversation('some text', {}, 'new_workspace', function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
           workspace_id: 'new_workspace',
           input: {
             text: 'some text'
@@ -133,7 +131,7 @@ describe('conversation service', function () {
         assert(e);
         assert(!r);
 
-        assert(!message_spy.called);
+        assert(!message.called);
         assert(e.message.match(/A valid workspace id is required/i));
 
         done();
@@ -141,10 +139,9 @@ describe('conversation service', function () {
     });
 
     it('On null context passes empty context in payload', function (done) {
-      err = {};
-      conversation('some text', null, function (e, r) {
-        assert(message_spy.calledOnce);
-        assert(message_spy.calledWith({
+      conversation('some text', null, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
           workspace_id: service_config.workspace_id,
           input: {
             text: 'some text'
@@ -158,28 +155,27 @@ describe('conversation service', function () {
     });
 
     it('Passes results to callback when no error', function (done) {
-      result = {
-        output: {
-          text: ['Which room would you like to paint?']
-        }
+      conversation_result.output = {
+        text: ['Which room would you like to paint?']
       };
       conversation('some text', {}, function (e, r) {
-        assert(message_spy.calledOnce);
+        assert(message.calledOnce);
 
         assert(!e, 'Error should be null');
         assert(r, 'Result should not be null');
-        assert.deepStrictEqual(r, result);
+        assert.deepStrictEqual(r, conversation_result);
 
         done();
       });
     });
 
     it('Passes error to callback when error', function (done) {
-      err = {
+      var err = {
         message: 'an error'
       };
+      message.callsArgWith(1, err);
       conversation('some text', {}, function (e, r) {
-        assert(message_spy.calledOnce);
+        assert(message.calledOnce);
 
         assert(e, 'Error should not be null');
         assert(!r, 'Result should be null');
@@ -190,21 +186,20 @@ describe('conversation service', function () {
     });
 
     it('Passes error to callback when error within results', function (done) {
-      result = {
-        output: {
-          error: {
-            message: 'an error'
-          }
+      conversation_result.output = {
+        error: {
+          message: 'an error'
         }
       };
       conversation('some text', {}, function (e, r) {
-        assert(message_spy.calledOnce);
+        assert(message.calledOnce);
         assert(e, 'Error should not be null');
         assert(!r);
-        assert.deepStrictEqual(e.innerError, result.output.error);
+        assert.deepStrictEqual(e.innerError, conversation_result.output.error);
 
         done();
       });
     });
+    
   });
 });

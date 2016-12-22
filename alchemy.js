@@ -39,8 +39,9 @@ function _newAlchemy(config) {
 /** 
  * The alchemy service wrapper factory.
  * @param {Object} config Configuration for the service.
- * @param {string} config.apikey 
- * @param {string} config.extract Comma seperated list of fields to extract
+ * @param {string} config.apikey.
+ * @param {string} config.extract Comma seperated list of fields to extract.
+ * @param {string} [config.language] Language to supply to alchemy.
  * @param {boolean} [config.ignore_unsupported_lang] Ignore errors from alchemy if the relate to the input language being unsupported.
  * @return {Object}
  */
@@ -53,6 +54,10 @@ function create(config) {
     url: 'https://www.ibm.com/us-en/',
     outputMode: 'json'
   };
+
+  if (config.language) {
+    parameters.language = config.language;
+  }
 
   var ignore_unsupported_lang = config.ignore_unsupported_lang || false;
 

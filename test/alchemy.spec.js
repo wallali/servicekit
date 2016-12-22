@@ -81,6 +81,18 @@ describe('alchemy', function () {
       });
     });
 
+    it('calls IBM alchemy with config language', function (done) {
+      config.language = 'english';
+      alchemyExtract = factory(config).extract;
+      alchemyExtract('some text', function () {
+        assert(fakeAlchemy.combined.calledOnce);
+
+        assert.strictEqual(fakeAlchemy.combined.args[0][0].language, 'english');
+
+        done();
+      });
+    });
+
     it('uses json as output mode', function (done) {
       alchemyExtract('some text', function () {
         assert(fakeAlchemy.combined.calledOnce);

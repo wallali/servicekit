@@ -41,13 +41,13 @@ function _newConversation(config) {
  * @param {Object} config Configuration for the dialog service.
  * @param {string} config.username 
  * @param {string} config.password 
- * @param {string} [config.version_date] Defaults to 2016-09-20.
+ * @param {string} [config.version_date] Defaults to 2017-02-03.
  * @param {string} [config.workspace_id] Workspace Id for dialog service.
  * @param {string} [config.userTimezone] A supported timezone string (https://www.ibm.com/watson/developercloud/doc/conversation/supported-timezones.html) 
  * @return {Function}
  */
 function create(config) {
-  config.version_date = config.version_date || ConversationV1.VERSION_DATE_2016_09_20;
+  config.version_date = config.version_date || ConversationV1.VERSION_DATE_2017_02_03;
 
   var watsonConverse = exports.newConversation(config);
 
@@ -85,7 +85,26 @@ function create(config) {
       context: ctx
     };
 
-    watsonConverse.message(payload, callback);
+    process.nextTick(() =>
+      watsonConverse.message(payload, callback));
+
+    return {
+      with: payloadExtender
+    };
+
+    function payloadExtender(intents, entities, output) {
+      if (intents) {
+        payload.intents = intents;
+      }
+
+      if (entities) {
+        payload.entities = entities;
+      }
+
+      if (output) {
+        payload.output = output;
+      }
+    }
 
     //--
 

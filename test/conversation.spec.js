@@ -70,7 +70,7 @@ describe('conversation service', function () {
       assert(conversation_factory.newConversation.calledOnce);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].username, service_config.username);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].password, service_config.password);
-      assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, '2016-09-20');
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, '2017-02-03');
 
     });
   });
@@ -121,6 +121,57 @@ describe('conversation service', function () {
 
         done();
       });
+    });
+
+    it('Adds intents to message', function (done) {
+      conversation('some text', null, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
+          workspace_id: service_config.workspace_id,
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: false,
+          context: {},
+          intents: ['one', 'two']
+        }));
+
+        done();
+      }).with(['one', 'two']);
+    });
+
+    it('Adds entities to message', function (done) {
+      conversation('some text', null, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
+          workspace_id: service_config.workspace_id,
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: false,
+          context: {},
+          entities: ['one', 'two']
+        }));
+
+        done();
+      }).with(null, ['one', 'two']);
+    });
+
+    it('Adds output to message', function (done) {
+      conversation('some text', null, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
+          workspace_id: service_config.workspace_id,
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: false,
+          context: {},
+          output: { text: 'output' }
+        }));
+
+        done();
+      }).with(null, null, { text: 'output' });
     });
 
     it('Returns error if no workspace id', function (done) {

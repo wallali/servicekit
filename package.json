@@ -22,7 +22,7 @@
     "url": "git://github.com/wallali/servicekit"
   },
   "devDependencies": {
-    "eslint": "^3.8.1",
+    "eslint": "^4.0.0",
     "istanbul": "^0.4.4",
     "mocha": "^3.1.2",
     "nock": "^9.0.0",

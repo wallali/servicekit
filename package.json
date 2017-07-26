@@ -7,7 +7,8 @@
     "pretest": "npm install",
     "test": "node_modules/.bin/mocha",
     "lint": "node_modules/.bin/eslint *.js test",
-    "coverage": "node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
+    "coverage": "node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
+    "docs": "node_modules/.bin/jsdoc -r -c jsdoc.conf.json ."
   },
   "author": "Ali Lokhandwala (ali@huestones.co.uk)",
   "license": "Apache-2.0",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "eslint": "^4.0.0",
     "istanbul": "^0.4.4",
+    "jsdoc": "^3.5.3",
     "mocha": "^3.1.2",
     "nock": "^9.0.0",
     "sinon": "^2.1.0"

@@ -16,40 +16,45 @@
 
 'use strict';
 
-const noop = function () {};
+const _ = require('lodash');
+const noop = () => 0;
 const cw = require('./callwit');
+
+const deprecate = _.once(() => console.warn('WARNING!! Wit.ai will stop serving requests to the /converse endpoint on February 1st 2018. See: https://wit.ai/blog/2017/07/27/sunsetting-stories'));
 
 exports = module.exports = create;
 
 //--
 
-/** 
+/**
  * The wit service factory.
  * @param {Object} config Configuration for the wit service.
  * @param {string} config.accessToken Wit access token for your app.
  * @param {string} [config.apiVersion]
- * @param {string} [config.userTimezone] Canonical timezone (http://joda-time.sourceforge.net/timezones.html) 
+ * @param {string} [config.userTimezone] Canonical timezone (http://joda-time.sourceforge.net/timezones.html)
  * @return {Function}
  */
 function create(config) {
 
-  var callwit = cw(config, '/converse', 'POST');
+  const callwit = cw(config, '/converse', 'POST');
 
   return converse;
 
   //--
 
   function converse(text, sessionId, context, reset, cb) {
+    deprecate();
+
     if (typeof (context) === 'function') {
       cb = context;
       context = {};
     }
-    
+
     if (typeof (reset) === 'function') {
       cb = reset;
       reset = false;
     }
-    
+
     if (!cb) cb = noop;
 
     var ctx = context || {};

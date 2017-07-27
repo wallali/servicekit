@@ -6,7 +6,7 @@
   "scripts": {
     "pretest": "npm install",
     "test": "node_modules/.bin/mocha",
-    "lint": "node_modules/.bin/eslint *.js test",
+    "lint": "node_modules/.bin/eslint *.js recast wit test",
     "coverage": "node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
     "docs": "node_modules/.bin/jsdoc -r -c jsdoc.conf.json ."
   },

@@ -4,6 +4,9 @@ An assortment of useful service wrappers with uniform initialization and simplif
 
 [![Build Status](https://travis-ci.org/wallali/servicekit.svg?branch=master)](https://travis-ci.org/wallali/servicekit)
 
+The aim of this library is to provide some useful services with a standard initialization pattern for all services.
+Furthermore the key calls for using those APIs have been greatly simplified using defaults for most parameters.
+
 Setup
 -----
 [![NPM](https://nodei.co/npm/servicekit.png)](https://npmjs.org/package/servicekit)
@@ -15,7 +18,7 @@ npm install servicekit --save
 
 Usage
 -----
-Use services by importing and initializing them with a config.
+Use services by importing and initializing them with a config. All services follow the same initialization pattern.
 
 ```javascript
 var alchemy = require('servicekit/alchemy')(config);
@@ -37,6 +40,7 @@ The following services are presently in the kit:
 - Wit (http://wit.ai)
 - Bing Spell Check (https://www.microsoft.com/cognitive-services/en-us/bing-spell-check-api/documentation)
 - Tone Analyzer (https://www.ibm.com/watson/developercloud/doc/tone-analyzer/)
+- Recast.ai (https://recast.ai)
 
 Configure Local Dev Environment
 ---------------------------

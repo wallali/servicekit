@@ -25,10 +25,11 @@ exports = module.exports = create;
 
 /**
  * The recast client factory.
+ * @protected
  * @param {Object} config Configuration for the recast service.
  * @param {string} config.requestToken A REQUEST_TOKEN for the recast.ai API
  * @param {string} [config.apiVersion]
- * @return {Function}
+ * @return {Function} The recast client
  */
 function create(config, operation) {
 

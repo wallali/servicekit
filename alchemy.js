@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @module ibm/alchemy */
+
 'use strict';
 
 const inspect = require('util').inspect;
@@ -22,6 +24,8 @@ const _ = require('lodash');
 const debug = require('debug')('servicekit:alchemy');
 const noop = function () {};
 
+const deprecate = _.once(() => console.warn('WARNING!! Alchemy Language service has been deprecated as of April 7, 2017 and will remain supported till Mar 7, 2018.'));
+
 exports = module.exports = create;
 exports.newAlchemy = _newAlchemy;
 
@@ -29,6 +33,7 @@ exports.newAlchemy = _newAlchemy;
 
 /**
  * Helper creates a new instance of the alchemy service.
+ * @private
  */
 function _newAlchemy(config) {
   return new AlchemyLanguageV1({
@@ -36,16 +41,19 @@ function _newAlchemy(config) {
   });
 }
 
-/** 
- * The alchemy service wrapper factory.
+/**
+ * The alchemy service factory.
+ * @deprecated Alchemy Language service has been deprecated as of April 7, 2017
  * @param {Object} config Configuration for the service.
  * @param {string} config.apikey.
  * @param {string} config.extract Comma seperated list of fields to extract.
  * @param {string} [config.language] Language to supply to alchemy.
  * @param {boolean} [config.ignore_unsupported_lang] Ignore errors from alchemy if the relate to the input language being unsupported.
- * @return {Object}
+ * @return {Object} The alchemy service.
  */
 function create(config) {
+  deprecate();
+
   var alchemy_language = exports.newAlchemy(config);
 
   var parameters = {

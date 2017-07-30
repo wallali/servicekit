@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @module watson/tone-analyzer */
+
 'use strict';
 
 const ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
@@ -35,6 +37,7 @@ Object.freeze(exports.tones);
 
 /**
  * Helper creates a new instance of the watson service.
+ * @private
  */
 function _newTA(config) {
   return new ToneAnalyzerV3({
@@ -46,14 +49,14 @@ function _newTA(config) {
 }
 
 /** 
- * The tone analyzer service wrapper factory.
+ * The tone analyzer service factory.
  * @param {Object} config Configuration for the service.
  * @param {string} config.username 
  * @param {string} config.password  
  * @param {string} [config.version_date] Defaults to 2016-05-19.
  * @param {boolean} [config.sentences] Enable or disable sentence level analyis. Default true.
  * @param {string} [config.tones] Filter the results by a specific tone. Default null.
- * @return {Function}
+ * @return {Function} The tone analyzer service
  */
 function create(config) {
   config.version_date = config.version_date || '2016-05-19';

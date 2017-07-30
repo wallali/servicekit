@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @module watson/conversation */
+
 'use strict';
 
 const ConversationV1 = require('watson-developer-cloud/conversation/v1');
@@ -27,6 +29,7 @@ exports.newConversation = _newConversation;
 
 /**
  * Helper creates a new instance of the watson service.
+ * @private
  */
 function _newConversation(config) {
   return new ConversationV1({
@@ -37,14 +40,14 @@ function _newConversation(config) {
 }
 
 /** 
- * The conversation service wrapper factory.
+ * The watson conversation service factory.
  * @param {Object} config Configuration for the dialog service.
  * @param {string} config.username 
  * @param {string} config.password 
  * @param {string} [config.version_date] Defaults to 2017-02-03.
  * @param {string} [config.workspace_id] Workspace Id for dialog service.
  * @param {string} [config.userTimezone] A supported timezone string (https://www.ibm.com/watson/developercloud/doc/conversation/supported-timezones.html) 
- * @return {Function}
+ * @return {Function} The watson conversation service
  */
 function create(config) {
   config.version_date = config.version_date || ConversationV1.VERSION_DATE_2017_02_03;

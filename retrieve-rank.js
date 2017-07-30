@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
+/** @module watson/retrieve-and-rank */
+
 'use strict';
 
 var RetrieveAndRankV1 = require('watson-developer-cloud/retrieve-and-rank/v1');
 var debug = require('debug')('servicekit:retrieve-rank');
 var noop = function () {};
 
+exports = module.exports = create;
+exports.newRnR = _newRnR;
+
+//--
+
 /**
  * Helper creates a new instance of the watson service.
+ * @private
  */
 function _newRnR(config) {
   return new RetrieveAndRankV1({
@@ -31,7 +39,7 @@ function _newRnR(config) {
 }
 
 /** 
- * The retrieve and rank service wrapper factory.
+ * The retrieve and rank service factory.
  * @param {Object} config Configuration for the service.
  * @param {string} config.username 
  * @param {string} config.password 
@@ -39,9 +47,9 @@ function _newRnR(config) {
  * @param {string} config.collection_name Solr collection name
  * @param {string} config.ranker_id Watson ranker id, optional
  * @param {string} config.row_count Count of rows to return, optional
- * @return {Object}
+ * @return {Object} The retrieve and rank service
  */
-module.exports = function create(config) {
+function create(config) {
   var retrieve = module.exports.newRnR(config);
 
   var solrClient = retrieve.createSolrClient({
@@ -121,5 +129,3 @@ module.exports = function create(config) {
     search: search
   };
 };
-
-module.exports.newRnR = _newRnR;

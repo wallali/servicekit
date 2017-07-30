@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @module recast/converse */
+
 'use strict';
 
 const clientFactory = require('./callrecast');
@@ -24,11 +26,11 @@ exports = module.exports = create;
 //--
 
 /**
- * The conversation service wrapper factory.
+ * The recast conversation service factory.
  * @param {Object} config Configuration for the recast service.
  * @param {string} config.requestToken A REQUEST_TOKEN for the recast.ai API
  * @param {string} [config.language] The language to use for all requests with this client, use '<?' to detect it on first attempt and remember the detected for subsequent attempts
- * @return {Function}
+ * @return {Function} The recast conversation service.
  */
 function create(config) {
 
@@ -56,8 +58,6 @@ function create(config) {
       debug('Using language', config.language);
     }
 
-    process.nextTick(() => callClient());
-
     const extenders = {
       in: (language) => {
         options.language = language;
@@ -68,6 +68,8 @@ function create(config) {
         return extenders;
       }
     };
+
+    process.nextTick(() => callClient());
 
     return extenders;
 

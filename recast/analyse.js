@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @module recast/analyse */
+
 'use strict';
 
 const clientFactory = require('./callrecast');
@@ -24,11 +26,11 @@ exports = module.exports = create;
 //--
 
 /**
- * The conversation service wrapper factory.
+ * The recast text analysis service factory.
  * @param {Object} config Configuration for the recast service.
  * @param {string} config.requestToken A REQUEST_TOKEN for the recast.ai API
  * @param {string} [config.language] The language to use for all requests with this client, use '<?' to detect it on first attempt and remember the detected for subsequent attempts
- * @return {Function}
+ * @return {Function} The recast text analysis service
  */
 function create(config) {
 
@@ -38,24 +40,30 @@ function create(config) {
 
   //--
 
-  function analyse(msg, cb) {
+  function analyse(msg, language, cb) {
+
+    if (typeof (language) === 'function') {
+      cb = language;
+      language = null;
+    }
 
     var options = {};
 
+    var lang;
+
     if (config.language && config.language !== '<?') {
-      options.language = config.language;
+      lang = config.language;
     }
 
-    process.nextTick(() => callClient());
+    if (language) {
+      lang = language;
+    }
 
-    const extenders = {
-      in: (language) => {
-        options.language = language;
-        return extenders;
-      }
-    };
+    options.language = lang;
 
-    return extenders;
+    debug('Using language', options.language);
+
+    return callClient();
 
     //--
 
@@ -65,6 +73,7 @@ function create(config) {
 
         if (config.language && config.language === '<?') {
           config.language = res.language;
+          debug('Saving detected language for subsequent calls', config.language);
         }
 
         return cb(null, res);

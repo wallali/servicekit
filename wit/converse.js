@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @module wit/converse */
+
 'use strict';
 
 const _ = require('lodash');
@@ -27,14 +29,16 @@ exports = module.exports = create;
 //--
 
 /**
- * The wit service factory.
+ * The wit converse service factory.
+ * @deprecated Wit.ai will stop serving requests to the /converse endpoint on February 1st 2018
  * @param {Object} config Configuration for the wit service.
  * @param {string} config.accessToken Wit access token for your app.
  * @param {string} [config.apiVersion]
  * @param {string} [config.userTimezone] Canonical timezone (http://joda-time.sourceforge.net/timezones.html)
- * @return {Function}
+ * @return {Function} The wit converse service
  */
 function create(config) {
+  deprecate();
 
   const callwit = cw(config, '/converse', 'POST');
 
@@ -43,7 +47,6 @@ function create(config) {
   //--
 
   function converse(text, sessionId, context, reset, cb) {
-    deprecate();
 
     if (typeof (context) === 'function') {
       cb = context;

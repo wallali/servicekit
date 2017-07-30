@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @module bingspell */
+
 'use strict';
 
 const request = require('request');
@@ -32,14 +34,14 @@ Object.freeze(exports.mode);
 //--
 
 /** 
- * Spell Check API service factory.
+ * Bing Spell Check API service factory.
  * @param {Object} config Configuration for the Spell Check API.
  * @param {string} config.subscriptionKey Spell Check API subscription key.
  * @param {string} [config.mode] Mode of spellcheck, default Spell.
  * @param {string} [config.apiVersion] default v5.0
  * @param {string} [config.language] default en-us
  * @param {Function} [config.correct] The correction function used to correct text.
- * @return {Function}
+ * @return {Function} The Bing Spell Check API service.
  */
 function create(config) {
 

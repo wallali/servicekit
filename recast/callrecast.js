@@ -28,7 +28,7 @@ exports = module.exports = create;
  * @protected
  * @param {Object} config Configuration for the recast service.
  * @param {string} config.requestToken A REQUEST_TOKEN for the recast.ai API
- * @param {string} [config.apiVersion]
+ * @param {string} [config.apiVersion] defaults to v2
  * @return {Function} The recast client
  */
 function create(config, operation) {
@@ -47,18 +47,13 @@ function create(config, operation) {
 
   /**
    * @param {string} text The user input
-   * @param {Object} [options] Additional options added to the request body
+   * @param {Object} options Additional options added to the request body
    * @param {string} [options.language] The user input language
    * @param {string} [options.conversation_token] The conversation token for a conversation
    * @param {Object} [options.memory] Prior memory for conversation
    * @param {Function} cb Callback
    */
   function recastClient(text, options, cb) {
-
-    if (typeof (options) === 'function') {
-      cb = options;
-      options = {};
-    }
 
     if (!text || text.length > 512) {
       let err = new Error('Bad request: Parameter text is required and should be less than 512 characters');
@@ -69,10 +64,13 @@ function create(config, operation) {
       url: endpoint + '/' + apiVersion + operation,
       method: 'POST',
       json: true,
-      body: _.defaults({ text: text }, options)
+      body: _.defaults({ text: text }, options),
+      headers: {
+        'Authorization': 'TOKEN ' + config.requestToken
+      }
     };
 
-    request(reqOptions, handleResponse).auth(null, null, true, config.requestToken);
+    request(reqOptions, handleResponse);
 
     //--
 

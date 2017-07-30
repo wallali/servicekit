@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @namespace recast */
+
 'use strict';
 
 exports.analyse = require('./analyse.js');

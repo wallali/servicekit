@@ -30,7 +30,7 @@ exports = module.exports = create;
  * @param {Object} config Configuration for the recast service.
  * @param {string} config.requestToken A REQUEST_TOKEN for the recast.ai API
  * @param {string} [config.language] The language to use for all requests with this client, use '<?' to detect it on first attempt and remember the detected for subsequent attempts
- * @return {Function} The recast conversation service.
+ * @return {Function} The recast conversation service {@link recast.converse}
  */
 function create(config) {
 
@@ -40,6 +40,17 @@ function create(config) {
 
   //--
 
+  /**
+   * Converse using the react converse endpoint. Chain in language override and/or memory.
+   * @memberOf recast
+   * @async
+   * @param {string} msg The message to converse with
+   * @param {string} [conversationToken]
+   * @param {function} cb callback(err, result)
+   *
+   * @example
+   * converse('hello', cb).in('en').recall(memory)
+   */
   function converse(msg, conversationToken, cb) {
     if (typeof (conversationToken) === 'function') {
       cb = conversationToken;
@@ -80,7 +91,7 @@ function create(config) {
         if (err) return cb(err);
 
         if (config.language && config.language === '<?') {
-          config.language = res.language;
+          config.language = res.results.language;
           debug('Saving detected language for subsequent calls', config.language);
         }
 

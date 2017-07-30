@@ -30,7 +30,7 @@ exports = module.exports = create;
  * @param {Object} config Configuration for the recast service.
  * @param {string} config.requestToken A REQUEST_TOKEN for the recast.ai API
  * @param {string} [config.language] The language to use for all requests with this client, use '<?' to detect it on first attempt and remember the detected for subsequent attempts
- * @return {Function} The recast text analysis service
+ * @return {Function} The recast text analysis service {@link recast.analyse}
  */
 function create(config) {
 
@@ -40,6 +40,14 @@ function create(config) {
 
   //--
 
+  /**
+   * Analyse text using the react analyse endpoint.
+   * @memberOf recast
+   * @async
+   * @param {string} msg The message text to analyse.
+   * @param {string} [language] Config language override
+   * @param {Function} cb callback(err, result)
+   */
   function analyse(msg, language, cb) {
 
     if (typeof (language) === 'function') {
@@ -72,7 +80,7 @@ function create(config) {
         if (err) return cb(err);
 
         if (config.language && config.language === '<?') {
-          config.language = res.language;
+          config.language = res.results.language;
           debug('Saving detected language for subsequent calls', config.language);
         }
 

@@ -128,4 +128,4 @@ function create(config) {
     searchAndRank: searchAndRank,
     search: search
   };
-};
+}

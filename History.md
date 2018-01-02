@@ -1,6 +1,15 @@
 Major Revisions
 ===============
 
+2.0.1 / 2018-01-02
+------------------
+
+- Breaking Changes due to update to watson-developer-cloud v3.x
+- Removed sunset Watson services Alchemy and Retrieve and Rank
+- Updated to major versions for debug, sinon and watson-developer-cloud
+- Updated Tone Analyzer to support latest API 2017-09-21
+
+
 1.3.0 / 2017-07-26
 ------------------
 

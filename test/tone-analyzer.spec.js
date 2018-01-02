@@ -35,10 +35,6 @@ describe('tone-analyzer', function () {
     fakeAnalyzer.tone.callsArgWith(1, null, {});
   });
 
-  it('defines tone constants', function () {
-    assert(factory.tones);
-  });
-
   describe('create', function () {
     it('calls newAnalyzer with supplied config', function () {
       factory.newAnalyzer = sinon.stub();
@@ -82,24 +78,24 @@ describe('tone-analyzer', function () {
       var tone = factory(config);
       tone('some text', function () {
         assert(fakeAnalyzer.tone.calledOnce);
-        assert.strictEqual(fakeAnalyzer.tone.args[0][0].text, 'some text');
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].tone_input, 'some text');
         assert.strictEqual(fakeAnalyzer.tone.args[0][0].sentences, true);
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].content_type, 'text/plain;charset=utf-8');
         assert(!fakeAnalyzer.tone.args[0][0].tones);
 
         done();
       });
     });
 
-    it('uses sentences and tones settings from config', function (done) {
+    it('uses sentences and content_type settings from config', function (done) {
       config.sentences = false;
-      config.tones = factory.tones.social;
+      config.content_type = 'text/html';
 
       var tone = factory(config);
       tone('some text', false, function () {
         assert(fakeAnalyzer.tone.calledOnce);
-        assert.strictEqual(fakeAnalyzer.tone.args[0][0].text, 'some text');
-        assert.strictEqual(fakeAnalyzer.tone.args[0][0].sentences, false);
-        assert.strictEqual(fakeAnalyzer.tone.args[0][0].tones, factory.tones.social);
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].tone_input, 'some text');
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].content_type, 'text/html');
 
         done();
       });
@@ -110,8 +106,35 @@ describe('tone-analyzer', function () {
       var tone = factory(config);
       tone('some text', true, function () {
         assert(fakeAnalyzer.tone.calledOnce);
-        assert.strictEqual(fakeAnalyzer.tone.args[0][0].text, 'some text');
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].tone_input, 'some text');
         assert.strictEqual(fakeAnalyzer.tone.args[0][0].sentences, true);
+        assert(!fakeAnalyzer.tone.args[0][0].tones);
+
+        done();
+      });
+    });
+
+    it('analyzes text tone and uses language setting and reads sentences from config', function (done) {
+      config.sentences = false;
+      var tone = factory(config);
+      tone('some text', 'fr', function () {
+        assert(fakeAnalyzer.tone.calledOnce);
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].tone_input, 'some text');
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].sentences, false);
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].content_language, 'fr');
+        assert(!fakeAnalyzer.tone.args[0][0].tones);
+
+        done();
+      });
+    });
+
+    it('analyzes text tone and uses language setting and defaults sentences', function (done) {
+      var tone = factory(config);
+      tone('some text', 'fr', function () {
+        assert(fakeAnalyzer.tone.calledOnce);
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].tone_input, 'some text');
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].sentences, true);
+        assert.strictEqual(fakeAnalyzer.tone.args[0][0].content_language, 'fr');
         assert(!fakeAnalyzer.tone.args[0][0].tones);
 
         done();

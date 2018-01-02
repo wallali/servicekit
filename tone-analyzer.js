@@ -25,14 +25,6 @@ const noop = () => 0;
 exports = module.exports = create;
 exports.newAnalyzer = _newTA;
 
-exports.tones = {
-  emotion: 'emotion',
-  language: 'language',
-  social: 'social'
-};
-
-Object.freeze(exports.tones);
-
 //--
 
 /**
@@ -53,13 +45,14 @@ function _newTA(config) {
  * @param {Object} config Configuration for the service.
  * @param {string} config.username 
  * @param {string} config.password  
- * @param {string} [config.version_date] Defaults to 2016-05-19.
- * @param {boolean} [config.sentences] Enable or disable sentence level analyis. Default true.
- * @param {string} [config.tones] Filter the results by a specific tone. Default null.
+ * @param {string} [config.version_date] Defaults to 2017-09-21.
+ * @param {boolean} [config.sentences] Enable or disable sentence level analysis. Default true.
+ * @param {string} [config.content_type] Input content type and charset. Default 'text/plain;charset=utf-8'
  * @return {Function} The tone analyzer service
  */
 function create(config) {
-  config.version_date = config.version_date || '2016-05-19';
+  config.version_date = config.version_date || '2017-09-21';
+  config.content_type = config.content_type || 'text/plain;charset=utf-8';
 
   var tone_analyzer = exports.newAnalyzer(config);
 
@@ -67,23 +60,32 @@ function create(config) {
 
   //--
 
-  function tone(text, sentences, cb) {
+  function tone(text, sentences, content_language, cb) {
+
+    if (typeof (content_language) === 'function') {
+      cb = content_language;
+      content_language = 'en';
+    }
 
     if (typeof (sentences) === 'function') {
       cb = sentences;
-      sentences = null;
+      sentences = config.sentences;
+      content_language = 'en';
+    }
+
+    if (typeof (sentences) === 'string') {
+      content_language = sentences;
+      sentences = config.sentences;
     }
 
     if (!cb) cb = noop;
 
     var parameters = {
-      text: text,
-      sentences: sentences === false ? false : true
+      tone_input: text,
+      sentences: sentences === false ? false : true,
+      content_type: config.content_type,
+      content_language: content_language
     };
-
-    if (config.tones) {
-      parameters.tones = config.tones;
-    }
 
     debug('tone analyzer parameters', parameters);
 

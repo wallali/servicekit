@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/** @namespace tone-analyzer */
 /** @module watson/tone-analyzer */
 
 'use strict';
@@ -60,6 +61,18 @@ function create(config) {
 
   //--
 
+  /**
+   * Analyse general tone for sentences or documents.
+   * @memberOf tone-analyzer
+   * @async
+   * @param {string} text The content to analyse
+   * @param {boolean} [sentences]  Returns an analysis of each individual sentence if true
+   * @param {string} [content_language] Content language code, can be 'en' or 'fr'. Default 'en'
+   * @param {function} cb callback(err, result)
+   *
+   * @example
+   * tone('This is great', cb)
+   */
   function tone(text, sentences, content_language, cb) {
 
     if (typeof (content_language) === 'function') {

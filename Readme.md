@@ -21,9 +21,9 @@ Usage
 Use services by importing and initializing them with a config. All services follow the same initialization pattern.
 
 ```javascript
-var alchemy = require('servicekit/alchemy')(config);
+var ta = require('servicekit/tone-analyzer')(config);
 
-alchemy.extract('text', function(err, result){
+ta.tone('That sounds great', function(err, result){
   if(err) {
     // handle it
   }
@@ -35,8 +35,6 @@ Services
 The following services are presently in the kit:
 
 - Conversation (https://www.ibm.com/watson/developercloud/conversation.html)
-- Retrieve and Rank (https://www.ibm.com/watson/developercloud/retrieve-rank.html)
-- Alchemy (https://www.ibm.com/watson/developercloud/alchemy-language.html)
 - Wit (http://wit.ai)
 - Bing Spell Check (https://www.microsoft.com/cognitive-services/en-us/bing-spell-check-api/documentation)
 - Tone Analyzer (https://www.ibm.com/watson/developercloud/doc/tone-analyzer/)

@@ -77,10 +77,10 @@ describe('conversation service', function () {
 
   describe('message()', function () {
 
-
     conversation_factory.newConversation = () => fake_conversation;
 
     var message, conversation;
+
     beforeEach(function () {
 
       message = fake_conversation.message;
@@ -174,6 +174,41 @@ describe('conversation service', function () {
       }).with(null, null, { text: 'output' });
     });
 
+    it('Switches on alternate_intents in the payload when requested', function (done) {
+      conversation('some text', null, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
+          workspace_id: service_config.workspace_id,
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: true,
+          context: {}
+        }));
+
+        done();
+      }).allIntents();
+    });
+
+    it('Allows multiple payload extension chaining', function (done) {
+      conversation('some text', null, function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
+          workspace_id: service_config.workspace_id,
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: true,
+          context: {},
+          output: { text: 'output' }
+        }));
+
+        done();
+      })
+        .with(null, null, { text: 'output' })
+        .allIntents();
+    });
+
     it('Returns error if no workspace id', function (done) {
       service_config.workspace_id = null;
       conversation = conversation_factory(service_config);
@@ -198,6 +233,24 @@ describe('conversation service', function () {
             text: 'some text'
           },
           alternate_intents: false,
+          context: {}
+        }));
+
+        done();
+      });
+    });
+
+    it('Passes config all_intents in payload', function (done) {
+      service_config.all_intents = true;
+      conversation = conversation_factory(service_config);
+      conversation('some text', {}, 'new_workspace', function () {
+        assert(message.calledOnce);
+        assert(message.calledWith({
+          workspace_id: 'new_workspace',
+          input: {
+            text: 'some text'
+          },
+          alternate_intents: true,
           context: {}
         }));
 

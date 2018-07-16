@@ -46,7 +46,8 @@ function _newConversation(config) {
  * @param {string} config.password 
  * @param {string} [config.version_date] Defaults to 2017-02-03.
  * @param {string} [config.workspace_id] Workspace Id for dialog service.
- * @param {string} [config.userTimezone] A supported timezone string (https://www.ibm.com/watson/developercloud/doc/conversation/supported-timezones.html) 
+ * @param {string} [config.userTimezone] A supported timezone string (https://www.ibm.com/watson/developercloud/doc/conversation/supported-timezones.html)
+ * @param {string} [config.all_intents] Set to true to return all intents with their corresponding confidences. Otherwise returns only the top most confident intent. Default false.
  * @return {Function} The watson conversation service
  */
 function create(config) {
@@ -84,16 +85,19 @@ function create(config) {
       input: {
         text: text
       },
-      alternate_intents: false,
+      alternate_intents: config.all_intents || false,
       context: ctx
     };
 
     process.nextTick(() =>
       watsonConverse.message(payload, callback));
 
-    return {
-      with: payloadExtender
+    var modifiers =  {
+      with: payloadExtender,
+      allIntents: allIntents
     };
+
+    return modifiers;
 
     function payloadExtender(intents, entities, output) {
       if (intents) {
@@ -107,6 +111,14 @@ function create(config) {
       if (output) {
         payload.output = output;
       }
+
+      return modifiers;
+    }
+
+    function allIntents() {
+      payload.alternate_intents = true;
+
+      return modifiers;
     }
 
     //--

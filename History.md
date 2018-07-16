@@ -1,6 +1,14 @@
 Major Revisions
 ===============
 
+2.1.0 / 2018-07-16
+------------------
+
+- Allow Watson Conversation service to return multiple intents
+- Update `mocha` to latest version fixing Critical Command Injection vulnerability in `npm audit`
+- Various other minor package updates
+
+
 2.0.1 / 2018-01-02
 ------------------
 

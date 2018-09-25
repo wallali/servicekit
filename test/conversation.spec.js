@@ -55,12 +55,16 @@ describe('conversation service', function () {
 
     it('Creates watson conversation using config params', function () {
       service_config.version_date = 'a date';
+      service_config.headers = {
+        'X-Watson-Metadata': 'customer_id=abc'
+      };
       conversation_factory(service_config);
 
       assert(conversation_factory.newConversation.calledOnce);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].username, service_config.username);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].password, service_config.password);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, 'a date');
+      assert.deepStrictEqual(conversation_factory.newConversation.args[0][0].headers, {'X-Watson-Metadata': 'customer_id=abc'});
 
     });
 
@@ -70,7 +74,9 @@ describe('conversation service', function () {
       assert(conversation_factory.newConversation.calledOnce);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].username, service_config.username);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].password, service_config.password);
-      assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, '2017-02-03');
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, '2017-02-27');
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].use_unauthenticated, false);
+      assert.deepStrictEqual(conversation_factory.newConversation.args[0][0].headers, {});
 
     });
   });

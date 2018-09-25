@@ -1,6 +1,18 @@
 Major Revisions
 ===============
 
+3.0.0 / 2018-09-25
+------------------
+- Breaking: Update to use Watson Assistant service, instead of Watson Conversation service.
+  You now have to use the Watson Assistant API urls when connecting to the service.
+  - US South: https://gateway.watsonplatform.net/assistant/api
+  - US East: https://gateway-wdc.watsonplatform.net/assistant/api
+  - Germany: https://gateway-fra.watsonplatform.net/assistant/api
+  - Sydney: https://gateway-syd.watsonplatform.net/assistant/api
+  - United Kingdom: https://gateway.watsonplatform.net/assistant/api
+- You can now optionally supply headers when constructing the service
+
+
 2.1.0 / 2018-07-16
 ------------------
 

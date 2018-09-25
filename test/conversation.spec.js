@@ -75,6 +75,7 @@ describe('conversation service', function () {
       assert.strictEqual(conversation_factory.newConversation.args[0][0].username, service_config.username);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].password, service_config.password);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, '2017-02-27');
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].use_unauthenticated, false);
       assert.deepStrictEqual(conversation_factory.newConversation.args[0][0].headers, {});
 
     });

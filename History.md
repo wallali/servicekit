@@ -1,6 +1,12 @@
 Major Revisions
 ===============
 
+3.1.0 / 2019-02-05
+------------------
+- Update to use Watson Assistant service iam access credentials.
+- Future versions will drop support for Node.js versions < 6
+
+
 3.0.0 / 2018-09-25
 ------------------
 - Breaking: Update to use Watson Assistant service, instead of Watson Conversation service.

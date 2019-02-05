@@ -4,9 +4,6 @@ node_js:
   - "node"
   - "8"
   - "6"
-  - "5"
-  - "4"
-  - "4.0"
 
 script:
 - npm run lint

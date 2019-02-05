@@ -37,6 +37,9 @@ function _newConversation(config) {
     url: config.url,
     username: config.username,
     password: config.password,
+    iam_apikey: config.iam_apikey,
+    iam_access_token: config.iam_access_token,
+    iam_url: config.iam_url,
     version: config.version_date,
     use_unauthenticated: config.use_unauthenticated,
     headers: config.headers
@@ -47,16 +50,18 @@ function _newConversation(config) {
  * Construct a AssistantV1 object.
  * @param {Object} options - Options for the service.
  * @param {string} options.version - The API version date to use with the service, in "YYYY-MM-DD" format. Whenever the API is changed in a backwards incompatible way, a new minor version of the API is released. The service uses the API version for the date you specify, or the most recent version before that date. Note that you should not programmatically specify the current date at runtime, in case the API has been updated since your application's release. Instead, specify a version date that is compatible with your application, and don't change it until your application is ready for a later version.
- * @param {string} options.version_date - The API version date to use with the service, in "YYYY-MM-DD" format. Whenever the API is changed in a backwards incompatible way, a new minor version of the API is released. The service uses the API version for the date you specify, or the most recent version before that date. Note that you should not programmatically specify the current date at runtime, in case the API has been updated since your application's release. Instead, specify a version date that is compatible with your application, and don't change it until your application is ready for a later version.
+ * @param {string} [options.version_date] - The API version date to use with the service, in "YYYY-MM-DD" format. Whenever the API is changed in a backwards incompatible way, a new minor version of the API is released. The service uses the API version for the date you specify, or the most recent version before that date. Note that you should not programmatically specify the current date at runtime, in case the API has been updated since your application's release. Instead, specify a version date that is compatible with your application, and don't change it until your application is ready for a later version.
  * @param {string} [options.url] - The base url to use when contacting the service (e.g. 'https://gateway.watsonplatform.net/assistant/api'). The base url may differ between Bluemix regions.
  * @param {string} [options.username] - The username used to authenticate with the service. Username and password credentials are only required to run your application locally or outside of Bluemix. When running on Bluemix, the credentials will be automatically loaded from the `VCAP_SERVICES` environment variable.
  * @param {string} [options.password] - The password used to authenticate with the service. Username and password credentials are only required to run your application locally or outside of Bluemix. When running on Bluemix, the credentials will be automatically loaded from the `VCAP_SERVICES` environment variable.
+ * @param {string} [options.iam_apikey] - An API key that can be used to request IAM tokens.
+ * @param {string} [options.iam_access_token] - An IAM access token fully managed by the application.
+ * @param {string} [options.iam_url] -An optional URL for the IAM service API.
  * @param {boolean} [options.use_unauthenticated] - Set to `true` to avoid including an authorization header. This option may be useful for requests that are proxied.
  * @param {Object} [options.headers] - Default headers that shall be included with every request to the service.
  * @param {string} [config.workspace_id] Workspace Id for dialog service.
  * @param {string} [config.userTimezone] A supported timezone string (https://www.ibm.com/watson/developercloud/doc/conversation/supported-timezones.html)
  * @param {string} [config.all_intents] Set to true to return all intents with their corresponding confidences. Otherwise returns only the top most confident intent. Default false.
-
  */
 function create(config) {
   config.version_date = config.version || config.version_date || '2017-02-27';

@@ -29,7 +29,8 @@ describe('conversation service', function () {
     service_config = {
       username: 'user',
       password: 'pass',
-      workspace_id: 'a6402fe8-5103-47ab-8722-5ebda9cd7363'
+      workspace_id: 'a6402fe8-5103-47ab-8722-5ebda9cd7363',
+      iam_apikey: 'api_key'
     };
     conversation_result = { output: {} };
 
@@ -63,6 +64,7 @@ describe('conversation service', function () {
       assert(conversation_factory.newConversation.calledOnce);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].username, service_config.username);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].password, service_config.password);
+      assert.strictEqual(conversation_factory.newConversation.args[0][0].iam_apikey, service_config.iam_apikey);
       assert.strictEqual(conversation_factory.newConversation.args[0][0].version_date, 'a date');
       assert.deepStrictEqual(conversation_factory.newConversation.args[0][0].headers, {'X-Watson-Metadata': 'customer_id=abc'});
 
